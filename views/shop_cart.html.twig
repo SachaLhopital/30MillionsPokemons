@@ -1,0 +1,93 @@
+{% extends 'error.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+{% for flashMessage in app.session.flashbag.get('success') %}
+<div class="alert alert-success">
+    {{ flashMessage }}
+</div>
+{% endfor %}
+
+<div class="panel panel-info">
+
+    {% if cartsLine is empty %}
+
+    <div class="panel-heading">
+        <div class="panel-title">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h5><span class="glyphicon glyphicon-shopping-cart"></span> Votre panier est vide !</h5>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+
+    <div class="panel-heading">
+        <div class="panel-title">
+            <div class="row">
+                <div class="col-xs-6">
+                    <h5><span class="glyphicon glyphicon-shopping-cart"></span> Contenu de mon panier</h5>
+                </div> 
+            </div>
+        </div>
+    </div>
+
+    {% for line in cartsLine %}
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-4 thumbnail">
+                <a href="{{ path('article', { 'id': line.pkm.id }) }}">
+                    <div class="wrapper">
+                        <img data-toggle="tooltip" data-placement="bottom" title="{{ line.pkm.name }}"  src="{{ app.request.basepath }}/images/{{ line.pkm.name }}.jpg">
+                    </div>
+                </a>
+            </div>
+            <div class="col-xs-4">
+                <h4 class="product-name"><strong>{{ line.pkm.name }}</strong></h4><h4><small>{{ line.pkm.description }}</small></h4>
+            </div>
+            <div class="col-xs-4">
+                <div class="col-xs-4 text-right">
+                    <h6><strong>{{ line.pkm.price }} € <span class="text-muted">x</span></strong></h6>
+                </div>
+                <div class="col-xs-6">
+                    <h6><strong> {{ line.qte }} </strong></h6>
+                </div>
+                <div class="col-xs-2">
+                    <a href="{{ path('remove_shop_cart', { 'idpkm': line.pkm.id , 'iduser': app.user.id }) }}" type="button" class="btn btn-link btn-xs">
+                        <span class="glyphicon glyphicon-trash"> </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <hr>
+    <div class="row">
+        <div class="text-center">
+            <div class="col-xs-9"></div>
+            <div class="col-xs-3"></div>
+        </div>
+    </div>
+    <br>
+    <div class="panel-footer">
+        <div class="row text-center">
+            <div class="col-xs-9">
+                <h4 class="text-right">Total <strong>{{ total }} €</strong></h4>
+            </div>
+            <div class="col-xs-3">
+                <a href="{{ path('removeAll_shop_cart', { 'iduser': app.user.id }) }}">
+                    <button type="button" class="btn btn-success btn-block">
+                        Valider ma commande
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
